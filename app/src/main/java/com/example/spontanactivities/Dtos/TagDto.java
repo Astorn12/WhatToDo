@@ -2,8 +2,12 @@ package com.example.spontanactivities.Dtos;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import com.example.spontanactivities.Helpers.SerialaizerDeserializer;
 import com.example.spontanactivities.Model.Tag;
+import com.fasterxml.jackson.core.io.SerializedString;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,12 +33,19 @@ public class TagDto {
         this.name=name;
         this.imageResource=imageResource;
         this.JSON=JSON;
-
+    }
+    @Ignore
+    public TagDto(String name,int imageResource, String JSON){
+        this.name=name;
+        this.imageResource=imageResource;
+        this.JSON=JSON;
     }
 
     public TagDto(Tag tag){
         this.name=tag.getName();
         this.imageResource=tag.getImageResource();
+        this.JSON= SerialaizerDeserializer.serialize(tag.getTagBehavior());
+
     }
 
     public String getName() {
@@ -61,4 +72,8 @@ public class TagDto {
         }
         return tags;
     }
+
+
+
+
 }

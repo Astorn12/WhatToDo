@@ -1,6 +1,8 @@
 package com.example.spontanactivities.Activities.Main;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -12,9 +14,8 @@ import com.example.spontanactivities.Tutorial.BeginningInicjalization;
 import com.example.spontanactivities.Model.Tag;
 import com.example.spontanactivities.Logic.ProgramicPatterns.Observer;
 import com.example.spontanactivities.R;
-import com.example.spontanactivities.Spontans.CRUD.AddSpontanPopUp;
 import com.example.spontanactivities.Model.Spontan;
-import com.example.spontanactivities.Spontans.SpontanAdapter;
+import com.example.spontanactivities.Activities.SpontanDetails.SpontanAdapter;
 import com.example.spontanactivities.Tags.TagMenu;
 
 
@@ -23,6 +24,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +35,7 @@ import android.view.Menu;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private Boolean tagFilterModyfication;
 
 
-    private boolean destroyingFlag=false;
+    private boolean destroyingFlag=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,15 +102,45 @@ public class MainActivity extends AppCompatActivity implements Observer {
         *  jest to rozumiane jako pierwsza inicjalizacja apki*/
         BeginningInicjalization beginningInicjalization = new BeginningInicjalization();
         beginningInicjalization.run(this);
-        List<Spontan>loadSpontans= loadSpontans();
+        //List<Spontan>loadSpontans= loadSpontans();
         mAdapter = new SpontanAdapter(loadSpontans());
         recyclerView.setAdapter(mAdapter);
         this.tagMenu = new TagMenu(this.tagsView, loadTags());
         this.tagMenu.load();
         tagMenu.add(this);
+        checkPermissions();
     }
 
-    public boolean isEquals(List<Spontan> firstList,List<Spontan> secondList){
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, 0);
+
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+                == PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_CONTACTS}, 0);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast toast=Toast.makeText(getApplicationContext(),
+                "Resume",
+                Toast.LENGTH_SHORT);
+        toast.show();
+        mAdapter.updateSpontanList(loadSpontans());
+        mAdapter.notifyDataSetChanged();
+
+
+    }
+
+    public boolean isEquals(List<Spontan> firstList, List<Spontan> secondList){
         for(Spontan first: firstList){
             for (Spontan second: secondList){
                 if(first.getId()!=second.getId()) return false;

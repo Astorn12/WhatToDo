@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.room.Dao;
 
+import com.example.spontanactivities.Data.Daos.Interfaces.TagDao;
 import com.example.spontanactivities.Data.DatabaseAdapter;
 import com.example.spontanactivities.Dtos.SpontanTagDto;
 import com.example.spontanactivities.Dtos.TagDto;

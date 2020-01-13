@@ -17,7 +17,7 @@ public class SpontanDto {
     public int id;
     @ColumnInfo(name = "name")
     public String name;
-    @ColumnInfo(name="state")
+    @ColumnInfo(name="stateId",index = true)
     public int  stateId;
 
 
@@ -27,10 +27,7 @@ public class SpontanDto {
         this.stateId = stateId;
     }
 
-    public SpontanDto(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+
     @Ignore
    public SpontanDto(String name){
         this.name=name;

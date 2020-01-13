@@ -7,16 +7,19 @@ import androidx.room.InvalidationTracker;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
-import com.example.spontanactivities.Data.Daos.SpontanDao;
-import com.example.spontanactivities.Data.Daos.SpontanTagDao;
-import com.example.spontanactivities.Data.Daos.StateDao;
+import com.example.spontanactivities.Data.Daos.Interfaces.PhotoDao;
+import com.example.spontanactivities.Data.Daos.Interfaces.SpontanDao;
+import com.example.spontanactivities.Data.Daos.Interfaces.SpontanTagDao;
+import com.example.spontanactivities.Data.Daos.Interfaces.StateDao;
 import com.example.spontanactivities.Data.Daos.TagDaoImp;
+import com.example.spontanactivities.Dtos.PhotoDto;
 import com.example.spontanactivities.Dtos.SpontanDto;
 import com.example.spontanactivities.Dtos.SpontanTagDto;
+import com.example.spontanactivities.Dtos.StateDto;
 import com.example.spontanactivities.Dtos.TagDto;
 
 
-@Database(entities = {SpontanDto.class, TagDto.class, SpontanTagDto.class}, version = 2,exportSchema = false)
+@Database(entities = {SpontanDto.class, TagDto.class, SpontanTagDto.class, StateDto.class, PhotoDto.class}, version = 4,exportSchema = false)
 
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -26,6 +29,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract TagDaoImp tagDao();
     public abstract SpontanTagDao spontanTagDao();
     public abstract StateDao stateDao();
+    public abstract PhotoDao photoDao();
+
 
     @NonNull
     @Override

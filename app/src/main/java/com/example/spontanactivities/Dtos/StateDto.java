@@ -16,6 +16,8 @@ public class StateDto {
         this.id = id;
         this.stateName = state;
     }
+    public StateDto(){}
+
 
     public int getId() {
         return id;
@@ -25,11 +27,11 @@ public class StateDto {
         this.id = id;
     }
 
-    public String getState() {
+    public String getStateName() {
         return stateName;
     }
 
-    public void setState(String state) {
-        this.stateName = state;
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
     }
 }
