@@ -3,7 +3,6 @@ package com.example.spontanactivities.Tutorial;
 import android.content.Context;
 
 import com.example.spontanactivities.Data.AppDatabase;
-import com.example.spontanactivities.Data.Daos.Interfaces.SpontanDao;
 import com.example.spontanactivities.Data.Daos.Interfaces.StateDao;
 import com.example.spontanactivities.Data.Daos.Interfaces.TagDao;
 import com.example.spontanactivities.Data.DatabaseAdapter;
@@ -13,6 +12,9 @@ import com.example.spontanactivities.Dtos.StateDto;
 import com.example.spontanactivities.Dtos.TagDto;
 import com.example.spontanactivities.Logic.TagBehaviors.FriendBehavior.Friends;
 import com.example.spontanactivities.Logic.TagBehaviors.Photo;
+import com.example.spontanactivities.Logic.TagBehaviors.Sensors.Compass;
+import com.example.spontanactivities.Logic.TagBehaviors.Sensors.LightMeter;
+import com.example.spontanactivities.Logic.TagBehaviors.Sensors.SensorList;
 import com.example.spontanactivities.Model.Spontan;
 import com.example.spontanactivities.Model.Tag;
 import com.example.spontanactivities.R;
@@ -73,7 +75,11 @@ public class BeginningInicjalization {
                 new Tag("At night",R.drawable.nighticon),
                 new Tag("Outside",R.drawable.outsideicon),
                 new Tag("Entertainment",R.drawable.entertinmenticon),
-                new Tag("Work",R.drawable.workicon, new Photo())
+                new Tag("Work",R.drawable.workicon, new Photo()),
+                new Tag("Accelerator",R.drawable.speedmeter),
+                new Tag("Noise detector",R.drawable.noisedetector,new LightMeter()),
+                new Tag("Compass",R.drawable.compas,new Compass()),
+                new Tag("Sensor list",R.drawable.sensors,new SensorList())
 
         );
         tagDao.insertAll(Tag.convert(tags));
@@ -90,7 +96,7 @@ public class BeginningInicjalization {
 
         List<Spontan> exampleSpontans=  Arrays.asList(new Spontan("Basen",getTags("Sport", "Learning", "At night")),
                 new Spontan("Kino", getTags("At night", "Entertainment")),
-                new Spontan("PaintBall", getTags("Shooping", "Sth new")));
+                new Spontan("PaintBall", getTags("Shooping", "Sth new","With friends")));
 
         for (Spontan spontan : exampleSpontans) {
             SpontanDto spontanDto= new SpontanDto(spontan);

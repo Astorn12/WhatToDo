@@ -9,7 +9,12 @@ import androidx.camera.core.Preview;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -25,6 +30,8 @@ import com.example.spontanactivities.Data.DatabaseAdapter;
 import com.example.spontanactivities.Data.ObjectAdapters.TagDataAdapter;
 import com.example.spontanactivities.Dtos.SpontanTagDto;
 import com.example.spontanactivities.Logic.ProgramicPatterns.TagTableObserver;
+import com.example.spontanactivities.Logic.TagBehaviors.Sensors.SensorObserved;
+import com.example.spontanactivities.Logic.TagBehaviors.Sensors.SensorObserver;
 import com.example.spontanactivities.Logic.TagBehaviors.TagBehavior;
 import com.example.spontanactivities.Model.Spontan;
 import com.example.spontanactivities.Model.Tag;
@@ -39,7 +46,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SpontanDetails extends AppCompatActivity  implements ObserverGalleryItem,ItemsStorager, TagTableObserver {
+public class SpontanDetails extends AppCompatActivity  implements ObserverGalleryItem,ItemsStorager, TagTableObserver, SensorEventListener, SensorObserved {
 
     TextView name;
     Spontan spontan;
@@ -51,13 +58,19 @@ public class SpontanDetails extends AppCompatActivity  implements ObserverGaller
 
     LinearLayout remove;
     LinearLayout tagBehaviorsLayout;
-
-
     TagBehavior activeTagBehavior;
+
+    SensorManager mSensorManager;
+    List<SensorObserver> sensorObservers;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spontan_details);
+        mSensorManager = (SensorManager)
+                getSystemService(Context.SENSOR_SERVICE);
+
+        this.sensorObservers= new LinkedList<>();
         tagBehaviorsLayout=findViewById(R.id.tagBehaviorsLayout);
         this.remove = findViewById(R.id.garbageicon);
         remove.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +105,16 @@ public class SpontanDetails extends AppCompatActivity  implements ObserverGaller
 
 
     }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mSensorManager.unregisterListener(this);
+    }
+
+    public void registerSensorListener(Sensor sensor, int samplingPeriodUS){
+        mSensorManager.registerListener(this,sensor,samplingPeriodUS);
+    }
+
 
 
 
@@ -283,4 +306,34 @@ public class SpontanDetails extends AppCompatActivity  implements ObserverGaller
         this.activeTagBehavior=tagBehavior;
     }
 
+    /**Sensord managemant*/
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+
+
+        inform(sensorEvent);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+
+    @Override
+    public void addSensorObserver(SensorObserver sensorObserver) {
+        this.sensorObservers.add(sensorObserver);
+    }
+
+    @Override
+    public void removeSensorObserver(SensorObserver sensorObserver) {
+        this.sensorObservers.remove(sensorObserver);
+    }
+
+    @Override
+    public void inform(SensorEvent sensorEvent) {
+        for(SensorObserver sensorObserver:this.sensorObservers){
+            sensorObserver.update(sensorEvent);
+        }
+    }
 }

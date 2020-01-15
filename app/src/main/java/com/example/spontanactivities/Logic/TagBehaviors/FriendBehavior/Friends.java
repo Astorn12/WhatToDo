@@ -11,8 +11,12 @@ import android.widget.ImageView;
 
 import com.example.spontanactivities.Logic.TagBehaviors.CommonTagBehavior;
 import com.example.spontanactivities.R;
+import com.example.spontanactivities.Views.GalleryLibrary.GalleryItemPackage.TickedListItem;
+import com.example.spontanactivities.Views.GalleryLibrary.GalleryPackage.GalleryImp;
+import com.example.spontanactivities.Views.GalleryLibrary.PopUpWindowPackage.PopUpGalleryImp;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
@@ -20,7 +24,7 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 public class Friends extends CommonTagBehavior {
 
 
-    List<Friends> friends;
+
 
 
     @Override
@@ -31,7 +35,16 @@ public class Friends extends CommonTagBehavior {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getContactList(context);
+                List<Friend> friendList=getContactList(context);
+
+                GalleryImp galleryImp= new GalleryImp(context);
+                for(Friend friend: friendList){
+                    galleryImp.addListItem(new TickedListItem(context, friend));
+                }
+
+
+                PopUpGalleryImp popUpGalleryImp= new PopUpGalleryImp(context,galleryImp);
+                popUpGalleryImp.show(imageView);
             }
         });
         return imageView;
@@ -39,6 +52,7 @@ public class Friends extends CommonTagBehavior {
 
     @Override
     public View getDisplayView(Context context) {
+
         return null;
     }
 
@@ -55,7 +69,8 @@ public class Friends extends CommonTagBehavior {
 
 
 
-    private void getContactList(Context context) {
+    private List<Friend> getContactList(Context context) {
+        List<Friend> friendsList= new LinkedList<>();
         ContentResolver cr = context.getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null, null);
@@ -77,6 +92,8 @@ public class Friends extends CommonTagBehavior {
                     while (pCur.moveToNext()) {
                         String phoneNo = pCur.getString(pCur.getColumnIndex(
                                 ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        Friend friend= new Friend(name, phoneNo);
+                        friendsList.add(friend);
                         Log.i(TAG, "Name: " + name);
                         Log.i(TAG, "Phone Number: " + phoneNo);
                     }
@@ -87,5 +104,6 @@ public class Friends extends CommonTagBehavior {
         if(cur!=null){
             cur.close();
         }
+        return friendsList;
     }
 }

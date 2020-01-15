@@ -1,6 +1,5 @@
 package com.example.spontanactivities.Logic.TagBehaviors;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -8,10 +7,11 @@ import android.view.View;
 import com.example.spontanactivities.Data.AppDatabase;
 import com.example.spontanactivities.Data.Daos.Interfaces.TagDao;
 import com.example.spontanactivities.Data.DatabaseAdapter;
-import com.example.spontanactivities.Dtos.TagDto;
 import com.example.spontanactivities.Helpers.SerialaizerDeserializer;
-import com.example.spontanactivities.Logic.TagBehaviors.FriendBehavior.Friend;
 import com.example.spontanactivities.Logic.TagBehaviors.FriendBehavior.Friends;
+import com.example.spontanactivities.Logic.TagBehaviors.Sensors.Compass;
+import com.example.spontanactivities.Logic.TagBehaviors.Sensors.LightMeter;
+import com.example.spontanactivities.Logic.TagBehaviors.Sensors.SensorList;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -23,7 +23,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Photo.class, name = "photo"),
         @JsonSubTypes.Type(value = Friends.class, name = "emptytagbehavior"),
-        @JsonSubTypes.Type(value = EmptyTagBehavior.class, name = "friends")
+        @JsonSubTypes.Type(value = EmptyTagBehavior.class, name = "friends"),
+        @JsonSubTypes.Type(value = SensorList.class, name = "sensorlist"),
+        @JsonSubTypes.Type(value = LightMeter.class, name = "lightmeter"),
+        @JsonSubTypes.Type(value = Compass.class, name = "compass")
 
 })
 @JsonTypeName("commontagbehavior")

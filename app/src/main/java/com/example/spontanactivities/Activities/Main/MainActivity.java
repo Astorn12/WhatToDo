@@ -115,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_DENIED){
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, 0);
-
         }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_DENIED){
@@ -136,8 +135,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
         toast.show();
         mAdapter.updateSpontanList(loadSpontans());
         mAdapter.notifyDataSetChanged();
-
-
     }
 
     public boolean isEquals(List<Spontan> firstList, List<Spontan> secondList){
